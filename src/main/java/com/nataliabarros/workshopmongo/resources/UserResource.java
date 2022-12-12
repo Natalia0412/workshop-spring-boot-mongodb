@@ -1,6 +1,7 @@
 package com.nataliabarros.workshopmongo.resources;
 
 import com.nataliabarros.workshopmongo.domain.User;
+import com.nataliabarros.workshopmongo.dto.UserDTO;
 import com.nataliabarros.workshopmongo.services.UserService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/users")//caminho do endpoint
@@ -20,9 +22,10 @@ public class UserResource {
     @Autowired
     private UserService service;
     @RequestMapping(method = RequestMethod.GET)//ou  @GetMapping
-    public ResponseEntity<List<User>>  findAll(){
+    public ResponseEntity<List<UserDTO>>  findAll(){
         List<User>list =service.findAll();
-        return ResponseEntity.ok().body(list);
+        List<UserDTO> userDTOList=list.stream().map(x->new UserDTO(x)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(userDTOList);
         //ResponseEntity cria os cabeçalhos
         //return ResponseEntity.ok().body(list); = retorna a resposta da requisição
         /*
